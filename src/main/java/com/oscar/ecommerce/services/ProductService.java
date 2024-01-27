@@ -1,5 +1,6 @@
 package com.oscar.ecommerce.services;
 
+import com.oscar.ecommerce.models.Category;
 import com.oscar.ecommerce.models.Product;
 import com.oscar.ecommerce.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,13 @@ public class ProductService {
         return product.orElse(null);
     }
 
+    public List<Product> findProductByName(String name) {
+        return this.productRepository.findProductByName(name);
+
+    }
+    public List<Product> findProductsByCategory(Category category) {
+        return this.productRepository.findProductByCategory(category);
+    }
     public void updateProductById(Product newProduct, long id) {
        Optional<Product> optionalProduct = this.productRepository.findById(id);
        if (optionalProduct.isPresent()) {
@@ -43,4 +51,5 @@ public class ProductService {
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
     }
+
 }
