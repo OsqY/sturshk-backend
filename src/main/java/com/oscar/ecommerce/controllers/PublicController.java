@@ -1,19 +1,25 @@
 package com.oscar.ecommerce.controllers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import com.oscar.ecommerce.models.Product;
+import com.oscar.ecommerce.services.ProductService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
 @RestController
-@RequestMapping(path = "api/public", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/api/public")
 public class PublicController {
-    @GetMapping
-    public ResponseEntity<?> publicEndpoint() {
-        return ResponseEntity.status(HttpStatus.OK).body("{ \"message\": \"Public endpoint.\"}");
+    private final ProductService productService;
+    public PublicController(ProductService productService) {
+        this.productService = productService;
+    }
 
+    @GetMapping("/products")
+    public List<Product> getProducts() {
+        return productService.getProducts();
     }
 }

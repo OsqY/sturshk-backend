@@ -1,19 +1,30 @@
 package com.oscar.ecommerce.controllers;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.oscar.ecommerce.models.Product;
+import com.oscar.ecommerce.services.ProductService;
+import org.springframework.web.bind.annotation.*;
+
+
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
 @RestController
-@RequestMapping(path = "/api/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/api/admin")
 public class AdminController {
-
-    @GetMapping(value = "")
-    public ResponseEntity<?> publicEndpoint() {
-        return ResponseEntity.status(HttpStatus.OK).body("{ \"message\": \"Este es un endpoint de administrador. Podes ver esta respuesta porque tu usuario tiene el rol 'adminstrador'\"}");
+    private final ProductService productService;
+    public AdminController(ProductService productService) {
+        this.productService = productService;
+    }
+    @PostMapping("/products")
+    public void addProduct(@RequestBody Product product) {
+        this.productService.addProduct(product);
     }
 
+    @PutMapping("/{id}")
+    public void updateProduct(@PathVariable long id, @RequestBody Product newProduct) {
+      this.productService.updateProductById(newProduct, id);
+
+    }
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable long id) {
+        this.productService.deleteProductById(id);
+    }
 }

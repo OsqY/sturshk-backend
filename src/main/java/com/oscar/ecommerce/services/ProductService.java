@@ -29,4 +29,18 @@ public class ProductService {
         Optional<Product> product = this.productRepository.findById(id);
         return product.orElse(null);
     }
+
+    public void updateProductById(Product newProduct, long id) {
+       Optional<Product> optionalProduct = this.productRepository.findById(id);
+       if (optionalProduct.isPresent()) {
+           Product product = optionalProduct.get();
+           product.setDescription(newProduct.getDescription());
+           product.setName(newProduct.getName());
+           product.setPrice(newProduct.getPrice());
+           this.productRepository.save(product);
+       }
+    }
+    public void deleteProductById(long id) {
+        this.productRepository.deleteById(id);
+    }
 }

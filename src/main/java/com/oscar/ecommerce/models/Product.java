@@ -9,17 +9,22 @@ import java.math.BigDecimal;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
     private long id;
 
-    @Column(name = "product_name")
     private String name;
 
-    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "product_description")
+    private String imageUrl;
+
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
+    @ManyToOne
+    private Category category;
 
     public long getId() {
         return id;
@@ -53,6 +58,29 @@ public class Product {
         this.description = description;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
     @Override
     public String toString() {
         return "Product{" +
