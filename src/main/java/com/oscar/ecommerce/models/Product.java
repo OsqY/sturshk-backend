@@ -1,11 +1,11 @@
 package com.oscar.ecommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,12 @@ public class Product {
     private String description;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
     @ManyToOne
+    @JsonManagedReference
     private Category category;
 
     public long getId() {

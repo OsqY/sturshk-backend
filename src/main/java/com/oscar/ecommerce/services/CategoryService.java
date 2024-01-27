@@ -5,6 +5,7 @@ import com.oscar.ecommerce.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -20,6 +21,18 @@ public class CategoryService {
     public void addCategory(Category category) {
         this.categoryRepository.save(category);
     }
+    public void updateCategory(long id, Category newCategory) {
+        Optional<Category> optionalCategory = this.categoryRepository.findById(id);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            category.setName(newCategory.getName());
+            if (newCategory.getProducts() != null) {
+                category.setProducts(newCategory.getProducts());
+            }
+            this.categoryRepository.save(category);
+        }
+    }
+
     public void deleteCategoryById(long id) {
         this.categoryRepository.deleteById(id);
     }

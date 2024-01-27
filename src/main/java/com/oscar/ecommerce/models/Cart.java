@@ -1,11 +1,11 @@
 package com.oscar.ecommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-@Table(name = "cart")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +13,7 @@ public class Cart {
     @OneToOne
     private SturshkUser sturshkUser;
     @OneToMany(mappedBy = "cart")
+    @JsonBackReference
     private List<Product> products;
 
     public long getId() {

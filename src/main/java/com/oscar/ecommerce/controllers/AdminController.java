@@ -4,6 +4,7 @@ import com.oscar.ecommerce.models.Category;
 import com.oscar.ecommerce.models.Product;
 import com.oscar.ecommerce.services.CategoryService;
 import com.oscar.ecommerce.services.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,6 +19,7 @@ public class AdminController {
         this.categoryService = categoryService;
     }
     @PostMapping("/products")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public void addProduct(@RequestBody Product product) {
         this.productService.addProduct(product);
     }
@@ -32,8 +34,18 @@ public class AdminController {
         this.productService.deleteProductById(id);
     }
 
-    @PostMapping("/categories")
+    @PostMapping("/category")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public void addCategory(@RequestBody Category category) {
         this.categoryService.addCategory(category);
+    }
+
+    @PutMapping("/category/{id}")
+    public void updateCategory(@PathVariable long id, @RequestBody Category category) {
+        this.categoryService.updateCategory(id, category);
+    }
+    @DeleteMapping("/category/{id}")
+    public void deleteCategory(@PathVariable long id) {
+        this.categoryService.deleteCategoryById(id);
     }
 }

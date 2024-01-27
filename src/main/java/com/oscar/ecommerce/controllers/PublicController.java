@@ -4,12 +4,16 @@ import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.UserInfo;
 import com.oscar.ecommerce.models.Category;
 import com.oscar.ecommerce.models.Product;
-import com.oscar.ecommerce.models.SturshkUser;
 import com.oscar.ecommerce.services.AuthService;
+import com.oscar.ecommerce.services.CategoryService;
 import com.oscar.ecommerce.services.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
 @RestController
@@ -17,31 +21,37 @@ import java.util.List;
 public class PublicController {
     private final ProductService productService;
     private final AuthService authService;
-    public PublicController(ProductService productService, AuthService authService) {
+    private final CategoryService categoryService;
+    public PublicController(ProductService productService, AuthService authService, CategoryService categoryService) {
         this.productService = productService;
         this.authService = authService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/user")
-    public SturshkUser getUser(@RequestHeader("Authorization") String accessToken) throws Auth0Exception {
-        UserInfo userInfo = (UserInfo) authService.getUserInfo(accessToken);
-        return authService.createUserFromUserInfo(userInfo);
+    public void createUser(@RequestHeader("Authorization") String accessToken) throws Auth0Exception {
+        UserInfo userInfo = authService.getUserInfo(accessToken);
+        authService.createUserFromUserInfo(userInfo);
     }
 
     @GetMapping("/products")
-    public List<Product> getProducts() {
-        System.out.println(productService.getProducts());
-        return productService.getProducts();
+    public Page<Product> getProducts(@PageableDefault(sort = "price") Pageable pageable) {
+        return productService.getProducts(pageable);
     }
     @GetMapping("/products/{id}")
     public Product getProductById(@PathVariable long id) { return productService.findProductById(id);}
 
     @GetMapping("/products/search")
-    public List<Product> getProductsByName(@RequestParam(name = "search") String name) {
-        return productService.findProductByName(name);
+    public Page<Product> getProductsByName(@RequestParam(name = "search") String name, Pageable pageable) {
+        return productService.findProductByName(name, pageable);
     }
     @GetMapping("/products/{category}")
-    public List<Product> getProductsByCategory(@PathVariable Category category) {
-        return productService.findProductsByCategory(category);
+    public Page<Product> getProductsByCategory(@PathVariable Category category, Pageable pageable) {
+        return productService.findProductsByCategory(category, pageable);
+    }
+
+    @GetMapping("/category")
+    public List<Category> getCategories() {
+        return categoryService.getCategories();
     }
 }
