@@ -1,7 +1,7 @@
 package com.oscar.ecommerce.controllers;
 
-import com.oscar.ecommerce.models.Category;
-import com.oscar.ecommerce.models.Product;
+import com.oscar.ecommerce.DTO.CategoryDTO;
+import com.oscar.ecommerce.DTO.ProductDTO;
 import com.oscar.ecommerce.services.CategoryService;
 import com.oscar.ecommerce.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -20,12 +20,12 @@ public class AdminController {
     }
     @PostMapping("/products")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void addProduct(@RequestBody Product product) {
-        this.productService.addProduct(product);
+    public void addProduct(@RequestBody ProductDTO productDTO) {
+        this.productService.addProduct(productDTO);
     }
 
     @PutMapping("/products/{id}")
-    public void updateProduct(@PathVariable long id, @RequestBody Product newProduct) {
+    public void updateProduct(@PathVariable long id, @RequestBody ProductDTO newProduct) {
       this.productService.updateProductById(newProduct, id);
 
     }
@@ -36,13 +36,13 @@ public class AdminController {
 
     @PostMapping("/category")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void addCategory(@RequestBody Category category) {
-        this.categoryService.addCategory(category);
+    public void addCategory(@RequestBody CategoryDTO categoryDTO) {
+        this.categoryService.addCategory(categoryDTO);
     }
 
     @PutMapping("/category/{id}")
-    public void updateCategory(@PathVariable long id, @RequestBody Category category) {
-        this.categoryService.updateCategory(id, category);
+    public void updateCategory(@PathVariable long id, @RequestBody CategoryDTO categoryDTO) {
+        this.categoryService.updateCategory(id, categoryDTO);
     }
     @DeleteMapping("/category/{id}")
     public void deleteCategory(@PathVariable long id) {
