@@ -30,6 +30,9 @@ public class CategoryService {
         }
         this.categoryRepository.save(mapDTOToCategory(categoryDTO));
     }
+    public Category getCategoryById(long id) {
+        return this.categoryRepository.findById(id).orElse(null);
+    }
     public void updateCategory(long id, CategoryDTO newCategory) {
         Optional<Category> optionalCategory = this.categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {

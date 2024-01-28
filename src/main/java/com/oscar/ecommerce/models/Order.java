@@ -9,7 +9,6 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue
-
     private long id;
     @ManyToOne
     private SturshkUser sturshkUser;
