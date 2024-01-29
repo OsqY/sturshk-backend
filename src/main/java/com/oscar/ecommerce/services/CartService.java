@@ -13,8 +13,8 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
-    public void addCart(Cart cart) {
-        this.cartRepository.save(cart);
+    public Cart addCart(Cart cart) {
+        return this.cartRepository.save(cart);
     }
     public Cart getCartById(long id) {
         Optional<Cart> optionalCart = this.cartRepository.findById(id);

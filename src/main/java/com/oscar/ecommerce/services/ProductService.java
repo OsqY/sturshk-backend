@@ -38,20 +38,20 @@ public class ProductService {
         return this.productRepository.findProductByCategory(category, pageable);
     }
 
-    public void addProduct(ProductDTO productDTO) {
+    public Product addProduct(ProductDTO productDTO) {
         if (productDTO == null) {
             throw new RuntimeException("Product can't be null");
         }
-        Product product = mapDTOToProduct(productDTO);
-        this.productRepository.save(product);
+        return this.productRepository.save(mapDTOToProduct(productDTO));
     }
-    public void updateProductById(ProductDTO newProduct, long id) {
+    public Product updateProductById(ProductDTO newProduct, long id) {
        Optional<Product> optionalProduct = this.productRepository.findById(id);
        if (optionalProduct.isPresent()) {
            Product product = optionalProduct.get();
            product = mapDTOToProduct(newProduct);
-           this.productRepository.save(product);
+           return this.productRepository.save(product);
        }
+       return null;
     }
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
@@ -62,7 +62,9 @@ public class ProductService {
         product.setPrice(productDTO.getPrice());
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
-        product.setImageUrl(productDTO.getImageUrl());
+        if (productDTO.getUrlImages() != null) {
+            product.setUrlImages(productDTO.getUrlImages());
+        }
         if(productDTO.getCategoryId() != null ) {
             Optional<Category> optionalCategory = this.categoryRepository.findById(productDTO.getCategoryId());
             if (optionalCategory.isEmpty()) {

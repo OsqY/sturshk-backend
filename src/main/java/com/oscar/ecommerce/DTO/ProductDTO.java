@@ -1,13 +1,14 @@
 package com.oscar.ecommerce.DTO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ProductDTO {
     private String name;
 
     private BigDecimal price;
 
-    private String imageUrl;
+    private List<String> urlImages;
 
     private String description;
     private Long categoryId;
@@ -27,13 +28,6 @@ public class ProductDTO {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public String getDescription() {
         return description;
@@ -51,12 +45,20 @@ public class ProductDTO {
         this.categoryId = categoryId;
     }
 
+    public List<String> getUrlImages() {
+        return urlImages;
+    }
+
+    public void setUrlImages(List<String> urlImages) {
+        this.urlImages = urlImages;
+    }
+
     @Override
     public String toString() {
         return "ProductDTO{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", urlImages=" + urlImages +
                 ", description='" + description + '\'' +
                 ", categoryId=" + categoryId +
                 '}';

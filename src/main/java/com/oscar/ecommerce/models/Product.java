@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -15,7 +16,8 @@ public class Product {
 
     private BigDecimal price;
 
-    private String imageUrl;
+    @ElementCollection
+    private List<String> urlImages;
 
     private String description;
 
@@ -60,8 +62,12 @@ public class Product {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getUrlImages() {
+        return urlImages;
+    }
+
+    public void setUrlImages(List<String> urlImages) {
+        this.urlImages = urlImages;
     }
 
     public Cart getCart() {
@@ -80,16 +86,16 @@ public class Product {
         this.category = category;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
+                ", urlImages=" + urlImages +
                 ", description='" + description + '\'' +
+                ", cart=" + cart +
+                ", category=" + category +
                 '}';
     }
 }

@@ -24,22 +24,23 @@ public class CategoryService {
         return this.categoryRepository.findAll();
     }
 
-    public void addCategory(CategoryDTO categoryDTO) {
+    public Category addCategory(CategoryDTO categoryDTO) {
         if (categoryDTO == null) {
             throw new RuntimeException("Category can't be null");
         }
-        this.categoryRepository.save(mapDTOToCategory(categoryDTO));
+        return this.categoryRepository.save(mapDTOToCategory(categoryDTO));
     }
     public Category getCategoryById(long id) {
         return this.categoryRepository.findById(id).orElse(null);
     }
-    public void updateCategory(long id, CategoryDTO newCategory) {
+    public Category updateCategory(long id, CategoryDTO newCategory) {
         Optional<Category> optionalCategory = this.categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             category = mapDTOToCategory(newCategory);
-            this.categoryRepository.save(category);
+            return this.categoryRepository.save(category);
         }
+        return null;
     }
 
     public void deleteCategoryById(long id) {

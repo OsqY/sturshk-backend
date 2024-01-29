@@ -2,9 +2,12 @@ package com.oscar.ecommerce.controllers;
 
 import com.oscar.ecommerce.DTO.CategoryDTO;
 import com.oscar.ecommerce.DTO.ProductDTO;
+import com.oscar.ecommerce.models.Category;
+import com.oscar.ecommerce.models.Product;
 import com.oscar.ecommerce.services.CategoryService;
 import com.oscar.ecommerce.services.ProductService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,33 +22,38 @@ public class AdminController {
         this.categoryService = categoryService;
     }
     @PostMapping("/products")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public void addProduct(@RequestBody ProductDTO productDTO) {
-        this.productService.addProduct(productDTO);
+    public ResponseEntity<?> addProduct(@RequestBody ProductDTO productDTO) {
+        Product product = this.productService.addProduct(productDTO);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @PutMapping("/products/{id}")
-    public void updateProduct(@PathVariable long id, @RequestBody ProductDTO newProduct) {
-      this.productService.updateProductById(newProduct, id);
-
+    public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestBody ProductDTO newProduct) {
+      Product product = this.productService.updateProductById(newProduct, id);
+      return new ResponseEntity<>(product, HttpStatus.OK);
     }
     @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable long id) {
         this.productService.deleteProductById(id);
+        return new ResponseEntity<>("Product with id: ${id} was deleted", HttpStatus.OK);
     }
 
     @PostMapping("/category")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void addCategory(@RequestBody CategoryDTO categoryDTO) {
-        this.categoryService.addCategory(categoryDTO);
+    public ResponseEntity<?> addCategory(@RequestBody CategoryDTO categoryDTO) {
+        Category category = this.categoryService.addCategory(categoryDTO);
+        return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
     @PutMapping("/category/{id}")
-    public void updateCategory(@PathVariable long id, @RequestBody CategoryDTO categoryDTO) {
-        this.categoryService.updateCategory(id, categoryDTO);
+    public ResponseEntity<?> updateCategory(@PathVariable long id, @RequestBody CategoryDTO categoryDTO) {
+        Category category = this.categoryService.updateCategory(id, categoryDTO);
+        return new ResponseEntity<>(category,HttpStatus.OK);
     }
     @DeleteMapping("/category/{id}")
-    public void deleteCategory(@PathVariable long id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable long id) {
         this.categoryService.deleteCategoryById(id);
+        return new ResponseEntity<>("Category with id: ${id} was deleted", HttpStatus.OK);
     }
+
 }

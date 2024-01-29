@@ -10,6 +10,8 @@ import com.oscar.ecommerce.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,13 +47,13 @@ public class PublicController {
     public Page<Product> getProductsByName(@RequestParam(name = "search") String name, Pageable pageable) {
         return productService.findProductByName(name, pageable);
     }
-    @GetMapping("/products/{category}")
+    @GetMapping("/products/category/{category}")
     public Page<Product> getProductsByCategory(@PathVariable Category category, Pageable pageable) {
         return productService.findProductsByCategory(category, pageable);
     }
 
     @GetMapping("/category")
-    public List<Category> getCategories() {
-        return categoryService.getCategories();
+    public ResponseEntity<?> getCategories() {
+        return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
 }
