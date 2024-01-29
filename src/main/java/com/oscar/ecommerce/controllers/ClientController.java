@@ -1,6 +1,7 @@
 package com.oscar.ecommerce.controllers;
 
 
+import com.oscar.ecommerce.DTO.CartDTO;
 import com.oscar.ecommerce.DTO.OrderDTO;
 import com.oscar.ecommerce.models.Cart;
 import com.oscar.ecommerce.models.Order;
@@ -23,18 +24,20 @@ public class ClientController {
     }
 
     @PostMapping("/cart")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public void createCart(@RequestBody Cart cart) {
-        this.cartService.addCart(cart);
+    public ResponseEntity<?> createCart(@RequestBody CartDTO cartDTO) {
+        Cart cart = this.cartService.addCart(cartDTO);
+        return new ResponseEntity<>(cart, HttpStatus.CREATED);
     }
 
     @PutMapping("/cart/{id}")
-    public void updateCart(@PathVariable long id, @RequestBody Cart cart) {
-        this.cartService.updateCart(id, cart);
+    public ResponseEntity<?> updateCart(@PathVariable long id, @RequestBody CartDTO cartDTO) {
+        Cart cart = this.cartService.updateCart(id, cartDTO);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
     @DeleteMapping("/cart/{id}")
-    public void deleteCart(@PathVariable long id) {
+    public ResponseEntity<?> deleteCart(@PathVariable long id) {
         this.cartService.deleteCart(id);
+        return new ResponseEntity<>("Cart with id: ${id} was deleted", HttpStatus.OK);
     }
 
     @GetMapping("/order/{id}")
