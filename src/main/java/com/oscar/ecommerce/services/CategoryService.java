@@ -34,13 +34,7 @@ public class CategoryService {
         return this.categoryRepository.findById(id).orElse(null);
     }
     public Category updateCategory(long id, CategoryDTO newCategory) {
-        Optional<Category> optionalCategory = this.categoryRepository.findById(id);
-        if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
-            category = mapDTOToCategory(newCategory);
-            return this.categoryRepository.save(category);
-        }
-        return null;
+        return updateDTOToCategory(id, newCategory);
     }
 
     public void deleteCategoryById(long id) {
@@ -59,5 +53,25 @@ public class CategoryService {
         }
         category.setProducts(products);
         return category;
+    }
+
+    private Category updateDTOToCategory(long id, CategoryDTO categoryDTO) {
+        Optional<Category> optionalCategory = this.categoryRepository.findById(id);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            if (categoryDTO.getProductIds() != null) {
+                List<Product> productsList = new ArrayList<>();
+                for (Long productId: categoryDTO.getProductIds()) {
+                    Optional<Product> optionalProduct = this.productRepository.findById(productId);
+                    optionalProduct.ifPresent(productsList::add);
+                }
+                category.setProducts(productsList);
+            }
+            if (categoryDTO.getName() != null) {
+                category.setName(categoryDTO.getName());
+            }
+            return category;
+        }
+        return null;
     }
 }

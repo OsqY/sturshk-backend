@@ -33,14 +33,7 @@ public class OrderService {
         return this.orderRepository.findById(id).orElse(null);
     }
     public Order updateOrder(long id, OrderDTO orderDTO) {
-        Optional<Order> optionalOrder = orderRepository.findById(id);
-        if(optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-            order = mapDTOToOrder(orderDTO);
-            this.orderRepository.save(order);
-            return order;
-        }
-        return null;
+    return updateDTOToOrder(id, orderDTO);
     }
 
     public void deleteOrder(long id) {
@@ -64,5 +57,31 @@ public class OrderService {
             optionalSturshkUser.ifPresent(order::setSturshkUser);
         }
         return order;
+    }
+
+    private Order updateDTOToOrder(long id, OrderDTO orderDTO) {
+        Optional<Order> optionalOrder = this.orderRepository.findById(id);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            if (orderDTO.getSturshkUserId() != null) {
+                Optional<SturshkUser> optionalSturshkUser = sturshkUserRepository.findById(orderDTO.getSturshkUserId());
+                optionalSturshkUser.ifPresent(order::setSturshkUser);
+            }
+            if (orderDTO.getOrderDetailsId() != null) {
+                List<OrderDetail> orderDetailList = new ArrayList<>();
+                for (Long orderDetailId: orderDTO.getOrderDetailsId()) {
+                    Optional<OrderDetail> optionalOrderDetail = orderDetailRepository.findById(orderDetailId);
+                    optionalOrderDetail.ifPresent(orderDetailList::add);
+                }
+            }
+            if (orderDTO.getStatus() != null) {
+                order.setStatus(orderDTO.getStatus());
+            }
+            if (orderDTO.getDateCreated() != null) {
+                order.setDateCreated(orderDTO.getDateCreated());
+            }
+            return order;
+        }
+        return null;
     }
 }

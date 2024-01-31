@@ -30,13 +30,7 @@ public class OrderDetailService {
         return mapDTOToOrder(orderDetailDTO);
     }
     public OrderDetail updateOrderDetail(long id, OrderDetailDTO orderDetailDTO) {
-        Optional<OrderDetail> optionalOrderDetail = this.orderDetailRepository.findById(id);
-        if (optionalOrderDetail.isPresent()) {
-            OrderDetail orderDetail = optionalOrderDetail.get();
-            orderDetail = mapDTOToOrder(orderDetailDTO);
-            return orderDetail;
-        }
-        return null;
+        return updateDTOToOrderDetail(id, orderDetailDTO);
     }
     public void deleteOrderDetail(long id) {
         this.orderDetailRepository.deleteById(id);
@@ -60,5 +54,24 @@ public class OrderDetailService {
         }
         return orderDetail;
     }
-}
 
+    private OrderDetail updateDTOToOrderDetail(long id, OrderDetailDTO orderDetailDTO) {
+        Optional<OrderDetail> optionalOrderDetail = this.orderDetailRepository.findById(id);
+        if (optionalOrderDetail.isPresent()) {
+            OrderDetail orderDetail = optionalOrderDetail.get();
+            if (orderDetailDTO.getQuantity() != null) {
+                orderDetail.setQuantity(orderDetail.getQuantity());
+            }
+            if (orderDetailDTO.getProductId() != null) {
+                Optional<Product> optionalProduct = this.productRepository.findById(orderDetailDTO.getProductId());
+                optionalProduct.ifPresent(orderDetail::setProduct);
+            }
+            if (orderDetailDTO.getOrderId() != null) {
+                Optional<Order> optionalOrder = this.orderRepository.findById(orderDetailDTO.getOrderId());
+                optionalOrder.ifPresent(orderDetail::setOrder);
+            }
+            return orderDetail;
+        }
+        return null;
+    }
+}

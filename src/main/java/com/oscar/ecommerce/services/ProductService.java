@@ -34,7 +34,8 @@ public class ProductService {
         return this.productRepository.findProductByName(name, pageable);
 
     }
-    public Page<Product> findProductsByCategory(Category category, Pageable pageable) {
+    public Page<Product> findProductsByCategory(String categoryName, Pageable pageable) {
+        Category category = this.categoryRepository.findByName(categoryName);
         return this.productRepository.findProductByCategory(category, pageable);
     }
 
@@ -45,13 +46,7 @@ public class ProductService {
         return this.productRepository.save(mapDTOToProduct(productDTO));
     }
     public Product updateProductById(ProductDTO newProduct, long id) {
-       Optional<Product> optionalProduct = this.productRepository.findById(id);
-       if (optionalProduct.isPresent()) {
-           Product product = optionalProduct.get();
-           product = mapDTOToProduct(newProduct);
-           return this.productRepository.save(product);
-       }
-       return null;
+       return mapUpdateDTO(id, newProduct);
     }
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
@@ -59,9 +54,15 @@ public class ProductService {
 
     private Product mapDTOToProduct(ProductDTO productDTO) {
         Product product = new Product();
-        product.setPrice(productDTO.getPrice());
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
+        if (productDTO.getPrice() != null) {
+            product.setPrice(productDTO.getPrice());
+        }
+        if (productDTO.getName() != null) {
+            product.setName(productDTO.getName());
+        }
+        if (productDTO.getDescription() != null) {
+            product.setDescription(productDTO.getDescription());
+        }
         if (productDTO.getUrlImages() != null) {
             product.setUrlImages(productDTO.getUrlImages());
         }
@@ -73,5 +74,29 @@ public class ProductService {
             product.setCategory(optionalCategory.get());
         }
         return product;
+    }
+    private Product mapUpdateDTO(long id, ProductDTO productDTO) {
+        Optional<Product> optionalProduct = this.productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            if (productDTO.getPrice() != null) {
+                product.setPrice(productDTO.getPrice());
+            }
+            if (productDTO.getName() != null) {
+                product.setName(productDTO.getName());
+            }
+            if (productDTO.getDescription() != null) {
+                product.setDescription(productDTO.getDescription());
+            }
+            if (productDTO.getUrlImages() != null) {
+                product.setUrlImages(productDTO.getUrlImages());
+            }
+            if(productDTO.getCategoryId() != null ) {
+                Optional<Category> optionalCategory = this.categoryRepository.findById(productDTO.getCategoryId());
+                optionalCategory.ifPresent(product::setCategory);
+            }
+            return this.productRepository.save(product);
+        }
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.oscar.ecommerce.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,13 +13,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private BigDecimal price;
 
+    @NotNull
     @ElementCollection
     private List<String> urlImages;
 
+    @NotNull
     private String description;
 
     @ManyToOne
@@ -27,6 +32,7 @@ public class Product {
     private Cart cart;
 
     @ManyToOne
+    @NotNull
     @JsonManagedReference
     private Category category;
 

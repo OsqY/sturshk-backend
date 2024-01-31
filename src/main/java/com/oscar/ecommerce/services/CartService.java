@@ -32,13 +32,7 @@ public class CartService {
     }
 
     public  Cart updateCart(long id, CartDTO newCart) {
-        Optional<Cart> optionalCart = this.cartRepository.findById(id);
-        if(optionalCart.isPresent()) {
-            Cart cart = optionalCart.get();
-            cart = mapDTOToCart(newCart);
-            return cart;
-        }
-        return null;
+        return updateDTOToCart(id, newCart);
     }
     public void deleteCart(long id) {
         this.cartRepository.deleteById(id);
@@ -61,5 +55,26 @@ public class CartService {
             }
         }
         return cart;
+    }
+
+    private Cart updateDTOToCart(long id, CartDTO cartDTO) {
+        Optional<Cart> optionalCart = this.cartRepository.findById(id);
+        if (optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            if (cartDTO.getProductsId() != null) {
+                List<Product> productList = new ArrayList<>();
+                for (Long productId: cartDTO.getProductsId()) {
+                    Optional<Product> optionalProduct = this.productRepository.findById(productId);
+                    optionalProduct.ifPresent(productList::add);
+                }
+                cart.setProducts(productList);
+            }
+            if (cartDTO.getSturkUserId() != null) {
+                Optional<SturshkUser> optionalSturshkUser = this.sturshkUserRepository.findById(cartDTO.getSturkUserId());
+                optionalSturshkUser.ifPresent(cart::setSturshkUser);
+            }
+            return cart;
+        }
+        return null;
     }
 }
