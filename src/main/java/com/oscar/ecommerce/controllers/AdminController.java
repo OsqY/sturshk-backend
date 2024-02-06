@@ -38,6 +38,11 @@ public class AdminController {
         return new ResponseEntity<>("Product with id: ${id} was deleted", HttpStatus.OK);
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<?> getCategories() {
+        return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
+    }
+
     @PostMapping("/category")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<?> addCategory(@RequestBody CategoryDTO categoryDTO) {

@@ -2,9 +2,11 @@ package com.oscar.ecommerce.controllers;
 
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.UserInfo;
+import com.oscar.ecommerce.DTO.CartDTO;
+import com.oscar.ecommerce.models.Cart;
 import com.oscar.ecommerce.models.Product;
 import com.oscar.ecommerce.services.AuthService;
-import com.oscar.ecommerce.services.CategoryService;
+import com.oscar.ecommerce.services.CartService;
 import com.oscar.ecommerce.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +22,12 @@ import org.springframework.web.bind.annotation.*;
 public class PublicController {
     private final ProductService productService;
     private final AuthService authService;
-    private final CategoryService categoryService;
-    public PublicController(ProductService productService, AuthService authService, CategoryService categoryService) {
+    private final CartService cartService;
+
+    public PublicController(ProductService productService, AuthService authService, CartService cartService) {
         this.productService = productService;
         this.authService = authService;
-        this.categoryService = categoryService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/user")
@@ -49,8 +52,20 @@ public class PublicController {
         return productService.findProductsByCategory(categoryName, pageable);
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<?> getCategories() {
-        return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
+    @PostMapping("/cart")
+    public ResponseEntity<?> createCart(@RequestBody CartDTO cartDTO) {
+        Cart cart = this.cartService.addCart(cartDTO);
+        return new ResponseEntity<>(cart, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/cart/{id}")
+    public ResponseEntity<?> updateCart(@PathVariable long id, @RequestBody CartDTO cartDTO) {
+        Cart cart = this.cartService.updateCart(id, cartDTO);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
+    }
+    @DeleteMapping("/cart/{id}")
+    public ResponseEntity<?> deleteCart(@PathVariable long id) {
+        this.cartService.deleteCart(id);
+        return new ResponseEntity<>("Cart with id: ${id} was deleted", HttpStatus.OK);
     }
 }

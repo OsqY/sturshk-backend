@@ -1,11 +1,8 @@
 package com.oscar.ecommerce.controllers;
 
 
-import com.oscar.ecommerce.DTO.CartDTO;
 import com.oscar.ecommerce.DTO.OrderDTO;
-import com.oscar.ecommerce.models.Cart;
 import com.oscar.ecommerce.models.Order;
-import com.oscar.ecommerce.services.CartService;
 import com.oscar.ecommerce.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,30 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/client")
 public class ClientController {
-    private final CartService cartService;
     private final OrderService orderService;
 
-    public ClientController(CartService cartService, OrderService orderService) {
-        this.cartService = cartService;
+    public ClientController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @PostMapping("/cart")
-    public ResponseEntity<?> createCart(@RequestBody CartDTO cartDTO) {
-        Cart cart = this.cartService.addCart(cartDTO);
-        return new ResponseEntity<>(cart, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/cart/{id}")
-    public ResponseEntity<?> updateCart(@PathVariable long id, @RequestBody CartDTO cartDTO) {
-        Cart cart = this.cartService.updateCart(id, cartDTO);
-        return new ResponseEntity<>(cart, HttpStatus.OK);
-    }
-    @DeleteMapping("/cart/{id}")
-    public ResponseEntity<?> deleteCart(@PathVariable long id) {
-        this.cartService.deleteCart(id);
-        return new ResponseEntity<>("Cart with id: ${id} was deleted", HttpStatus.OK);
-    }
 
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable long id) {
